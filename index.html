@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+        <title>Maki v0.1</title>
+
+        <link rel="stylesheet" href="assets/css/all.css" />
+
+        <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="assets/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="assets/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="assets/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="assets/apple-touch-icon-144x144.png" />
+    </head>
+    <body>
+        <!--[if IE]>
+        <script src="assets/js/html5.js"></script>
+        <![endif]-->
+
+        <div id="maki">
+            <section class="loading">
+                <h1>Maki<su class="version">0.1</span></h1>
+                <p>By <a href="http://github.com/danielgwood">@danielgwood</a></p>
+                <p class="provided-by">Data provided by <a href="http://www.themoviedb.org" target="_blank"><img src="assets/img/tmdb.png" alt="TMDB logo" /></a></p>
+            </section>
+
+            <header>
+                <h1>Maki</h1>
+                <aside class="stats">
+                    <span class="count-showing">139</span>/<span class="count-total">139</span> films,
+                    <span class="count-time">14.6</span> hours viewing time.
+                </aside>
+            </header>
+
+            <section class="listings" id="listings-container"></section>
+
+            <section class="info" id="info-container">
+                <div class="info-wrapper">
+                    <img class="info-poster" src="" alt="poster" />
+                    <h2 class="info-title"></h2>
+                    <p class="info-tagline"></p>
+                    <p class="info-blurb"></p>
+                    <div class="info-rating"></div>
+                    <dl class="info-facts">
+                        <dt class="info-rating">Rating</dt>
+                            <dd></dd>
+                        <dt class="info-year">Release year</dt>
+                            <dd></dd>
+                        <dt class="info-director">Directed by</dt>
+                            <dd></dd>
+                        <dt class="info-runningtime">Running time</dt>
+                            <dd></dd>
+                        <dt class="info-genres">Genres</dt>
+                            <dd></dd>
+                    </dl>
+
+                    <h3>Cast</h3>
+                    <ul class="info-cast"></ul>
+
+                    <a id="close-info-container" class="info-close-btn" href="#close" title="Close preview">&times;</a>
+                </div>
+            </section>
+        </div>
+
+        <!-- JavaScript -->
+        <script src="cache/films.js"></script>
+        <script src="cache/collections.js"></script>
+        <script src="assets/js/jquery-1.10.2.min.js"></script>
+        <script src="assets/js/maki.js"></script>
+    </body>
+</html>
