@@ -12,6 +12,7 @@ You can see a library generated using a couple of hundred films here: http://dan
 Usage
 -----
 In this early version, the setup process is a little unintuitive, requiring CLI usage of PHP:
+
 1. Clone repo
 2. Get an API key for TMDB: http://docs.themoviedb.apiary.io/
 3. Put your API key in generator/config.php where shown
