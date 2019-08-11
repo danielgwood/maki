@@ -56,7 +56,49 @@ a {
 }
 
 a:hover {
-    color: #0f75ff;
+    color: #0049c3;
+}
+
+form {
+	margin: 0;
+	padding: 0;
+}
+
+.field {
+	display: block;
+	position: relative;
+}
+
+input[type="text"],
+input[type="search"] {
+	position: relative;
+	display: block;
+	border: 2px solid #151515;
+	border-radius: 0.25em;
+	padding: 0.5em 0.5em;
+	width: 100%;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 0.75em;
+	font-weight: normal;
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus {
+	border-color: #0049c3;
+	outline: none;
+}
+
+.input-prefixed {
+	padding-left: 2em !important;
+}
+
+.input-prefix {
+	position: absolute;
+	top: 50%;
+	left: 0.5em;
+	z-index: 2;
+	transform: translateY(-50%);
+	font-size: 0.875em;
 }
 
 ::-webkit-scrollbar-track
@@ -145,6 +187,7 @@ a:hover {
 
 .header-stats {
     float: right;
+	padding-top: 0.75em;
     width: 24em;
     color: #eee;
     font-size: 0.75em;
@@ -189,6 +232,15 @@ nav a {
     border-right: 3px solid #0049c3;
 }
 
+.option-listing h3 {
+	margin: 1.5em 0 0;
+	padding: 0.25em 0.5em 0.25em 1em;
+	color: #aaa;
+	font-size: 0.75em;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
 .option-listing a {
     background-color: #242424;
 	color: #ddd;
@@ -224,6 +276,12 @@ nav a {
     background-color: #0c4cb7;
 }
 
+.search {
+	background-color: #242424;
+	padding: 0.5em 0.375em;
+}
+
+/* Main film list */
 .film-listing {
     background-color: #242424;
 	color: #eee;
@@ -268,8 +326,9 @@ nav a {
     top: 0;
     left: 0;
     box-shadow: 0 0 15px 1px #111;
-    -webkit-box-shadow: 0 0 15px 1px #111;
-    -moz-box-shadow: 0 0 15px 1px #111;
+	width: 342px;
+	height: 513px;
+	background-color: #1a1a1a;
 }
 
 .info-title {

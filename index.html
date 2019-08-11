@@ -33,7 +33,29 @@
                 </aside>
             </header>
 
-            <section class="listings" id="listings-container"></section>
+            <section class="listings" id="listings-container">
+                <nav id="main-menu" class="option-listing">
+                    <h3>Search</h3>
+                    <form class="search">
+                        <div class="field">
+                            <i class="fas fa-search input-prefix"></i>
+                            <input class="input-prefixed" type="search" id="search" placeholder="e.g. 'Harry Potter'" />
+                        </div>
+                    </form>
+
+                    <h3>Browse</h3>
+                    <ul id="browse-menu">
+                        <li class="selected"><a href="#all" data-value="all"><i class="fa fa-sort-alpha-down"></i> All films</a></li>
+                    </ul>
+
+                    <h3>Choose</h3>
+                    <ul>
+                        <li><a href="#random"><i class="fa fa-dice"></i> Random</a></li>
+                    </ul>
+                </nav>
+
+                <nav class="film-listing"></nav>
+            </section>
 
             <section class="info" id="info-container">
                 <div class="info-wrapper">

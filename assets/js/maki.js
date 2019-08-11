@@ -22,31 +22,33 @@
     function showLoading()
     {
         $('.loading').show();
-        window.setTimeout("$('.loading').fadeOut();", 5000);
+        window.setTimeout("$('.loading').fadeOut();", 3000);
     }
 
     function updateMenus()
     {
-        // Build main menu
-        var html = '<nav class="option-listing"><ul><li class="selected"><a href="#all" data-value="all"><i class="fa fa-sort-alpha-down"></i> All films</a></li>';
-        if(genres.length > 1) {
-            html += '<li><a href="#genres" data-value="genres"><i class="fa fa-grin-squint-tears"></i> Genres</li>';
-        }
-        if(collections.length > 1) {
+        // Build browse menu
+        var html = '';
+        if (collections.length > 1) {
             html += '<li><a href="#collections" data-value="collections"><i class="fa fa-folder-open"></i> Collections</li>';
         }
-        if(cast.length > 1) {
+        if (genres.length > 1) {
+            html += '<li><a href="#genres" data-value="genres"><i class="fa fa-heart"></i> Genres</li>';
+        }
+        if (cast.length > 1) {
             html += '<li><a href="#cast" data-value="cast"><i class="fa fa-theater-masks"></i> Cast</li>';
         }
-        if(directors.length > 1) {
+        if (directors.length > 1) {
             html += '<li><a href="#directors" data-value="directors"><i class="fa fa-bullhorn"></i> Directors</li>';
         }
-        if(years.length > 1) {
+        if (years.length > 1) {
             html += '<li><a href="#years" data-value="years"><i class="fa fa-calendar"></i> Release years</li>';
         }
-        html += '</ul></nav>';
+        $('#browse-menu').append(html);
 
         // Build submenus
+        html = '';
+
         var all = {genres: genres, collections: collections, cast: cast, directors: directors, years: years};
         for(var i in all) {
             var subgroup = all[i];
@@ -61,11 +63,7 @@
                 html += '</ul></nav>';
             }
         };
-
-        // Build film listing
-        html += '<nav class="film-listing"></nav>';
-
-        $('#listings-container').append(html);
+        $('#main-menu').after(html);
     }
 
     function updateFilmListing()
@@ -99,7 +97,7 @@
                     left: '16em'
                 },
                 {
-                    duration: 'normal',
+                    duration: 200,
                     step: function(now, fx) {
                         if(currentMenu === null) {
                             $('.film-listing').css('margin-left', (16 + now)+'em');
@@ -282,13 +280,20 @@
         );
     }
 
+    function showRandomFilm()
+    {
+        var i = random(0, films.length);
+
+        showFilmInfo(films[i].id);
+    }
+
     function initialiseDB()
     {
-        if(!films || films.length < 1) {
+        if (!films || films.length < 1) {
             showError("No cache file detected! Please run the generator.", true);
         }
 
-        for(var i in films) {
+        for (var i in films) {
             var currentFilm = films[i];
 
             currentFilm.showing = true;
@@ -319,11 +324,16 @@
         directors = directors.filter(removeDuplicates, {previousValue: null});
         years = years.filter(removeDuplicates, {previousValue: null});
 
-        if(collectionsMap.length > 0) {
+        if (collectionsMap.length > 0) {
             for(var i in collectionsMap) {
                 collections.push(collectionsMap[i]['name']);
             }
         }
+    }
+
+    function random(min, max)
+    {
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     function initialise()
@@ -348,19 +358,24 @@
         if($(this).attr('href') === '#all') {
             // "All films"
             hideAllMenus();
+            $(this).parent().addClass('selected');
+
+        } else if($(this).attr('href') === '#random') {
+            // Randomiser!
+            showRandomFilm();
 
         } else if($(this).attr('href') === '#filter') {
             // 2nd-level menu
             $(this).parent().siblings().removeClass('selected');
             updateFilter($(this).data('key'), $(this).data('value'));
+            $(this).parent().addClass('selected');
 
         } else {
             // 1st-level menu
             $('.selected').removeClass('selected');
             showMenu($(this).data('value'));
+            $(this).parent().addClass('selected');
         }
-
-        $(this).parent().addClass('selected');
     });
 
     $('body').on('click', '.film-listing a', function(event) {
