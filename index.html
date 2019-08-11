@@ -36,10 +36,10 @@
             <section class="listings" id="listings-container">
                 <nav id="main-menu" class="option-listing">
                     <h3>Search</h3>
-                    <form class="search">
+                    <form class="search" id="search" method="post" action="">
                         <div class="field">
                             <i class="fas fa-search input-prefix"></i>
-                            <input class="input-prefixed" type="search" id="search" placeholder="e.g. 'Harry Potter'" />
+                            <input class="input-prefixed" type="search" id="search-term" placeholder="e.g. 'Harry Potter'" />
                         </div>
                     </form>
 
@@ -55,6 +55,15 @@
                 </nav>
 
                 <nav class="film-listing"></nav>
+
+                <div id="search-no-results" class="film-listing-overlay">
+                    <div class="film-listing-overlay-inner">
+                        <i class="fas fa-frown"></i>
+                        <p>
+                            Sorry, nothing matching that search term!
+                        </p>
+                    </div>
+                </div>
             </section>
 
             <section class="info" id="info-container">

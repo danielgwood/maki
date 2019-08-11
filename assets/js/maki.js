@@ -8,6 +8,7 @@
     var filter = {};
     var currentMenu = null;
     var errorTimeout = null;
+    var searchIndex = null;
 
     function showError(message, isFatal)
     {
@@ -123,7 +124,7 @@
 
     function updateFilter(key, value)
     {
-        if(key === false) {
+        if (key === false) {
             // Remove all filters
             filter = {};
             for(var i in db) {
@@ -137,39 +138,39 @@
             return;
         }
 
-        if($.isEmptyObject(filter) || !(filter.hasOwnProperty(key) && filter[key] === value)) {
+        if ($.isEmptyObject(filter) || !(filter.hasOwnProperty(key) && filter[key] === value)) {
             // Remember the filter value
             filter = {};
             filter[key] = value;
 
             // If we're filtering for a collection, get the collection array first
             var collection = [];
-            if(key === 'collections') {
-                for(var i in collectionsMap) {
-                    if(collectionsMap[i]['name'] === value) {
+            if (key === 'collections') {
+                for (var i in collectionsMap) {
+                    if (collectionsMap[i]['name'] === value) {
                         collection = collectionsMap[i]['films'];
                     }
                 }
             }
 
             // Filter the items
-            for(var i in db) {
+            for (var i in db) {
                 var currentFilm = db[i];
                 currentFilm.showing = false;
 
-                if(key === 'genres' && $.inArray(value, currentFilm.genres) !== -1) {
+                if (key === 'genres' && $.inArray(value, currentFilm.genres) !== -1) {
                     currentFilm.showing = true;
 
-                } else if(key === 'collections' && $.inArray(currentFilm.title, collection) !== -1) {
+                } else if (key === 'collections' && $.inArray(currentFilm.title, collection) !== -1) {
                     currentFilm.showing = true;
 
-                } else if(key === 'cast' && $.inArray(value, currentFilm.cast) !== -1) {
+                } else if (key === 'cast' && $.inArray(value, currentFilm.cast) !== -1) {
                     currentFilm.showing = true;
 
-                } else if(key === 'directors' && $.inArray(value, currentFilm.director) !== -1) {
+                } else if (key === 'directors' && $.inArray(value, currentFilm.director) !== -1) {
                     currentFilm.showing = true;
 
-                } else if(key === 'years' && currentFilm.releaseYear == value) {
+                } else if (key === 'years' && currentFilm.releaseYear == value) {
                     currentFilm.showing = true;
                 }
             }
@@ -287,12 +288,86 @@
         showFilmInfo(films[i].id);
     }
 
+    function searchFilms(term)
+    {
+        $('.selected').removeClass('selected');
+        $('#search').addClass('selected');
+
+        var results = searchIndex.search(
+            term,
+            {
+                fields: {
+                    title: { boost: 5 },
+                    cast: { boost: 2 },
+                    directors: { boost: 2 },
+                    overview: { boost: 1 }
+                },
+                expand: true
+            }
+        );
+
+        if (results.length === 0) {
+            $('#search-no-results').show();
+
+        } else {
+            $('#search-no-results').hide();
+
+            for (var i in films) {
+                var j = 0;
+                var matched = false;
+
+                while (j < results.length) {
+                    if (results[j] != null && results[j].doc.id == films[i].id) {
+                        matched = true;
+                        films[i]['showing'] = true;
+                        results[j] = null;
+                        break;
+                    }
+
+                    j++;
+                }
+
+                if (!matched) {
+                    films[i]['showing'] = false;
+                }
+            }
+        }
+
+        // Re-render
+        updateFilmListing();
+        updateStats();
+    }
+
+    function clearSearch()
+    {
+        $('#search-no-results').hide();
+        $('#search').removeClass('selected');
+        $('a[href="#all"]').parent().addClass('selected');
+
+        for (var i in films) {
+            films[i]['showing'] = true;
+        }
+
+        // Re-render
+        updateFilmListing();
+        updateStats();
+    }
+
     function initialiseDB()
     {
         if (!films || films.length < 1) {
             showError("No cache file detected! Please run the generator.", true);
         }
 
+        searchIndex = elasticlunr(function (){
+            this.addField('title');
+            this.addField('overview');
+            this.addField('cast');
+            this.addField('directors');
+            this.setRef('id');
+        });
+
+        var searchEntry;
         for (var i in films) {
             var currentFilm = films[i];
 
@@ -303,6 +378,15 @@
             cast = cast.concat(currentFilm.cast || []);
             directors.push(currentFilm.director);
             years.push(currentFilm.releaseYear);
+
+            searchEntry = {
+                id:        currentFilm.id,
+                title:     currentFilm.title,
+                overview:  currentFilm.overview,
+                cast:      currentFilm.cast,
+                directors: currentFilm.directors
+            };
+            searchIndex.addDoc(searchEntry);
         }
 
         genres.sort();
@@ -399,6 +483,24 @@
                 hideFilmInfo();
                 event.preventDefault();
             }
+        }
+    });
+
+    $('#search').on('submit', function(event) {
+        event.preventDefault();
+
+        if ($('#search-term').val().length > 2) {
+            searchFilms($('#search-term').val());
+        } else {
+            clearSearch();
+        }
+    });
+
+    $('#search-term').on('keyup', function(event) {
+        if ($('#search-term').val().length > 2) {
+            searchFilms($('#search-term').val());
+        } else {
+            clearSearch();
         }
     });
 
