@@ -228,11 +228,11 @@
         var html = '';
         var stars = 0;
         while(stars < film.rating) {
-            html += '<img src="assets/img/star-filled.png" alt="Star">';
+            html += '<i class="fa fa-star info-rating-star-filled"></i>';
             stars++;
         }
         while(stars < 10) {
-            html += '<img src="assets/img/star-empty.png" alt="Empty star">';
+            html += '<i class="fa fa-star info-rating-star-empty"></i>';
             stars++;
         }
         $('.info-rating + dd:eq(0)').html(html);
@@ -333,18 +333,6 @@
 
         // Loading screen
         showLoading();
-
-        // Request full screen
-        var elem = document.getElementById("maki");
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.msRequestFullscreen) {
-            elem.msRequestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) {
-            elem.webkitRequestFullscreen();
-        }
 
         // Show initial stats
         updateStats();
