@@ -390,9 +390,13 @@
         hideFilmInfo();
     });
 
-    $('html').on('scroll', function(event) {
-        console.log('hello!');
-        hideFilmInfo();
+    $('body').on('keyup', function(event) {
+        if (event.key === "Escape") {
+            if ($('#info-container').is(':visible')) {
+                hideFilmInfo();
+                event.preventDefault();
+            }
+        }
     });
 
     $(document).ready(function() {
