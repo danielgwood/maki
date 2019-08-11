@@ -1,4 +1,4 @@
-(function($) {
+;(function($) {
     var db = [];
     var genres = [];
     var collections = [];
@@ -28,21 +28,21 @@
     function updateMenus()
     {
         // Build main menu
-        var html = '<nav class="option-listing"><ul><li class="selected"><a href="#all" data-value="all">All films</a></li>';
+        var html = '<nav class="option-listing"><ul><li class="selected"><a href="#all" data-value="all"><i class="fa fa-sort-alpha-down"></i> All films</a></li>';
         if(genres.length > 1) {
-            html += '<li><a href="#genres" data-value="genres">Genres</li>';
+            html += '<li><a href="#genres" data-value="genres"><i class="fa fa-grin-squint-tears"></i> Genres</li>';
         }
         if(collections.length > 1) {
-            html += '<li><a href="#collections" data-value="collections">Collections</li>';
+            html += '<li><a href="#collections" data-value="collections"><i class="fa fa-folder-open"></i> Collections</li>';
         }
         if(cast.length > 1) {
-            html += '<li><a href="#cast" data-value="cast">Cast</li>';
+            html += '<li><a href="#cast" data-value="cast"><i class="fa fa-theater-masks"></i> Cast</li>';
         }
         if(directors.length > 1) {
-            html += '<li><a href="#directors" data-value="directors">Directors</li>';
+            html += '<li><a href="#directors" data-value="directors"><i class="fa fa-bullhorn"></i> Directors</li>';
         }
         if(years.length > 1) {
-            html += '<li><a href="#years" data-value="years">Release years</li>';
+            html += '<li><a href="#years" data-value="years"><i class="fa fa-calendar"></i> Release years</li>';
         }
         html += '</ul></nav>';
 

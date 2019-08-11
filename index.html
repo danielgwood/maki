@@ -3,9 +3,10 @@
     <head>
         <meta charset="utf-8" />
 
-        <title>Maki v0.1</title>
+        <title>Maki</title>
 
         <link rel="stylesheet" href="assets/css/all.css" />
+        <link rel="stylesheet" href="assets/css/fontawesome.min.css" />
 
         <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
         <link rel="apple-touch-icon" href="assets/apple-touch-icon-57x57.png" />
@@ -14,13 +15,9 @@
         <link rel="apple-touch-icon" sizes="144x144" href="assets/apple-touch-icon-144x144.png" />
     </head>
     <body>
-        <!--[if IE]>
-        <script src="assets/js/html5.js"></script>
-        <![endif]-->
-
         <div id="maki">
             <section class="loading">
-                <h1>Maki<su class="version">0.1</span></h1>
+                <h1>Maki<span class="version">2.0</span></h1>
                 <p>By <a href="http://github.com/danielgwood">@danielgwood</a></p>
                 <p class="provided-by">Data provided by <a href="http://www.themoviedb.org" target="_blank"><img src="assets/img/tmdb.png" alt="TMDB logo" /></a></p>
             </section>
@@ -28,8 +25,8 @@
             <header>
                 <h1>Maki</h1>
                 <aside class="stats">
-                    <span class="count-showing">139</span>/<span class="count-total">139</span> films,
-                    <span class="count-time">14.6</span> hours viewing time.
+                    <span class="count-showing">COUNT</span>/<span class="count-total">COUNT</span> films,
+                    <span class="count-time">HOURS</span> hours viewing time.
                 </aside>
             </header>
 
@@ -66,7 +63,8 @@
         <!-- JavaScript -->
         <script src="cache/films.js"></script>
         <script src="cache/collections.js"></script>
-        <script src="assets/js/jquery-1.10.2.min.js"></script>
+        <script src="assets/js/jquery-3.4.1.min.js"></script>
+        <script src="assets/js/elasticlunr.min.js"></script>
         <script src="assets/js/maki.js"></script>
     </body>
 </html>
