@@ -349,7 +349,7 @@ nav a {
 
 .info-wrapper {
     position: relative;
-    padding-left: 382px;
+    padding-left: 24em;
 }
 
 .info-poster {
@@ -357,8 +357,8 @@ nav a {
     top: 0;
     left: 0;
     box-shadow: 0 0 15px 1px #111;
-	width: 342px;
-	height: 513px;
+	width: 22em;
+	height: auto;
 	background-color: #1a1a1a;
 }
 
