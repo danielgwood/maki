@@ -6,6 +6,7 @@
     var directors = [];
     var years = [];
     var filter = {};
+    var viewMode = 'posters';
     var currentMenu = null;
     var errorTimeout = null;
     var searchIndex = null;
@@ -69,16 +70,34 @@
 
     function updateFilmListing()
     {
-        var html = '<ul>';
+        if (viewMode === 'posters') {
+            // show poster thumbnails
+            var html = '<div>'
 
-        for(var i in db) {
-            var currentFilm = db[i];
+            for(var i in db) {
+                var currentFilm = db[i];
 
-            if(currentFilm.showing) {
-                html += '<li><a href="#info" data-id="' + currentFilm.id + '">' + currentFilm.title + '</li>';
+                if(currentFilm.showing) {
+                    html += '<a class="film-listing-poster" href="#info" data-id="' + currentFilm.id + '" title="' + currentFilm.title + '"><img src="cache/' + currentFilm.poster + '" alt="' + currentFilm.title + '" /></a>';
+                }
             }
+
+            html += '</div>';
+
+        } else {
+            // text list
+            var html = '<ul>';
+
+            for(var i in db) {
+                var currentFilm = db[i];
+
+                if(currentFilm.showing) {
+                    html += '<li><a href="#info" data-id="' + currentFilm.id + '">' + currentFilm.title + '</li>';
+                }
+            }
+
+            html += '</ul>';
         }
-        html += '</ul>';
 
         $('.film-listing').html(html);
     }
@@ -353,6 +372,16 @@
         updateStats();
     }
 
+    function changeViewMode(mode)
+    {
+        viewMode = mode;
+
+        $('a[data-action="view-mode"]').removeClass('selected');
+        $('a[data-action="view-mode"][data-value="' + mode + '"]').addClass('selected');
+
+        updateFilmListing();
+    }
+
     function initialiseDB()
     {
         if (!films || films.length < 1) {
@@ -502,6 +531,11 @@
         } else {
             clearSearch();
         }
+    });
+
+    $('a[data-action="view-mode"]').on('click', function(event) {
+        event.preventDefault();
+        changeViewMode($(this).data('value'));
     });
 
     $(document).ready(function() {
