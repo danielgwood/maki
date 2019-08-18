@@ -10,6 +10,7 @@
     var currentMenu = null;
     var errorTimeout = null;
     var searchIndex = null;
+    var longestRunningTime = 1;
 
     function showError(message, isFatal)
     {
@@ -78,7 +79,7 @@
                 var currentFilm = db[i];
 
                 if(currentFilm.showing) {
-                    html += '<a class="film-listing-poster" href="#info" data-id="' + currentFilm.id + '" title="' + currentFilm.title + '"><img src="cache/' + currentFilm.poster + '" alt="' + currentFilm.title + '" /></a>';
+                    html += '<a class="film-listing-poster" href="#info" data-action="info" data-value="' + currentFilm.id + '" title="' + currentFilm.title + '"><img src="cache/' + currentFilm.poster + '" alt="' + currentFilm.title + '" /></a>';
                 }
             }
 
@@ -277,6 +278,7 @@
         $('.info-genres').after(html);
 
         // Set up container
+        hideSuggestForm();
         $('#info-container').fadeIn();
     }
 
@@ -316,9 +318,9 @@
             term,
             {
                 fields: {
-                    title: { boost: 5 },
-                    cast: { boost: 2 },
-                    directors: { boost: 2 },
+                    title: { boost: 5, bool: "AND" },
+                    cast: { boost: 2, bool: "AND" },
+                    directors: { boost: 2, bool: "AND" },
                     overview: { boost: 1 }
                 },
                 expand: true
@@ -372,6 +374,128 @@
         updateStats();
     }
 
+    function initialiseSuggestForm()
+    {
+        if (longestRunningTime < 180) {
+            $('#suggest-duration').val(longestRunningTime);
+            $('#suggest-duration-range').val(longestRunningTime);
+        }
+
+        $('#suggest-duration').attr('max', longestRunningTime);
+        $('#suggest-duration-range').attr('max', longestRunningTime);
+
+        $('#suggest-duration-range').on('input', function(event) {
+            $('#suggest-duration').val($(this).val());
+        });
+        $('#suggest-duration-range').on('change', function(event) {
+            $('#suggest-duration').val($(this).val());
+        });
+
+        $('#suggest-duration').on('change', function(event) {
+            $('#suggest-duration-range').val($(this).val());
+        });
+
+        var genreOpts = '';
+        for (var i in genres) {
+            genreOpts += '<option value="' + genres[i] + '">' + genres[i] + '</option>';
+        }
+        $('#suggest-genres').append(genreOpts);
+    }
+
+    function showSuggestForm()
+    {
+        $('#suggest-results').hide();
+        $('#suggest-no-results').hide();
+
+        $('#listings-container').hide();
+
+        $('#suggest-container').fadeIn("slow");
+    }
+
+    function hideSuggestForm()
+    {
+        $('#listings-container').show();
+        $('#suggest-container').fadeOut(50);
+        window.scrollTo(0, 0);
+    }
+
+    function suggestFilms(count, maxRunningTime, genres)
+    {
+        $('#suggest-results').hide();
+        $('#suggest-no-results').hide();
+
+        var matches = [];
+
+        // find ALL matches
+        for (var i in films) {
+            var currentFilm = films[i];
+
+            if (currentFilm.runningTime > maxRunningTime) {
+                continue;
+            }
+
+            if (genres.length === 1 && genres[0] === "all") {
+                matches.push(currentFilm);
+
+            } else {
+                var matchesGenre = false;
+
+                for (var j in genres) {
+                    if (currentFilm.genres.indexOf(genres[j]) !== -1) {
+                        matchesGenre = true;
+                        break;
+                    }
+                }
+
+                if (matchesGenre) {
+                    matches.push(currentFilm);
+                }
+            }
+        }
+
+        if (matches.length > 0) {
+            // randomise
+            matches = shuffle(matches);
+
+            // narrow to count
+            matches = matches.slice(0, count);
+        }
+
+        // display
+        if (matches.length == 0) {
+            $('#suggest-no-results').show();
+            smoothScrollDanielSawka($('#suggest-no-results').offset().top, 50);
+
+        } else {
+            var results = '';
+
+            for (var i in matches) {
+                results += '<li>';
+
+                results += '<div class="suggest-results-poster">';
+                results += '<img src="cache/' + matches[i]['poster'] + '">';
+                results += '</div>';
+
+                results += '<div class="suggest-results-details">';
+
+                results += '<h3>' + matches[i]['title'] + '</h3>';
+                results += '<p>' + matches[i]['overview'] + '</p>';
+
+                results += '<a class="btn" href="#info" data-action="info" data-value="' + matches[i]['id'] + '"><i class="fas fa-film"></i> Full details</a>';
+
+                results += '</div>';
+
+                results += '</li>';
+            }
+
+            $('#suggest-results')
+                .html(results)
+                .show();
+
+            smoothScrollDanielSawka($('#suggest-results').offset().top - 50, 200);
+        }
+    }
+
     function changeViewMode(mode)
     {
         viewMode = mode;
@@ -416,6 +540,10 @@
                 directors: currentFilm.directors
             };
             searchIndex.addDoc(searchEntry);
+
+            if (currentFilm.runningTime && parseInt(currentFilm.runningTime) > longestRunningTime) {
+                longestRunningTime = parseInt(currentFilm.runningTime);
+            }
         }
 
         genres.sort();
@@ -449,6 +577,46 @@
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
+    function shuffle(array)
+    {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
+    function smoothScrollDanielSawka(elementY, duration)
+    {
+        var startingY = window.pageYOffset;
+        var diff = elementY - startingY;
+        var start;
+
+        window.requestAnimationFrame(function step(timestamp) {
+            if (!start) {
+                start = timestamp;
+            }
+
+            var time = timestamp - start;
+            var percent = Math.min(time / duration, 1);
+
+            window.scrollTo(0, startingY + diff * percent);
+
+            if (time < duration) {
+                window.requestAnimationFrame(step);
+            }
+        });
+    }
+
     function initialise()
     {
         // Initialise database
@@ -463,6 +631,9 @@
         // Build menus
         updateMenus();
         updateFilmListing();
+
+        // Suggest tool
+        initialiseSuggestForm();
     }
 
     $('body').on('click', '.option-listing a', function(event) {
@@ -476,6 +647,10 @@
         } else if($(this).attr('href') === '#random') {
             // Randomiser!
             showRandomFilm();
+
+        } else if($(this).attr('href') === '#suggest') {
+            // Suggest tool
+            showSuggestForm();
 
         } else if($(this).attr('href') === '#filter') {
             // 2nd-level menu
@@ -491,9 +666,9 @@
         }
     });
 
-    $('body').on('click', '.film-listing a', function(event) {
+    $('body').on('click', '[data-action="info"]', function(event) {
         event.preventDefault();
-        showFilmInfo($(this).data('id'));
+        showFilmInfo($(this).data('value'));
     });
 
     $('body').on('click', '#show-all-cast', function(event) {
@@ -510,6 +685,10 @@
         if (event.key === "Escape") {
             if ($('#info-container').is(':visible')) {
                 hideFilmInfo();
+                event.preventDefault();
+
+            } else if ($('#suggest-container').is(':visible')) {
+                hideSuggestForm();
                 event.preventDefault();
             }
         }
@@ -531,6 +710,21 @@
         } else {
             clearSearch();
         }
+    });
+
+    $('#suggest-form').on('submit', function(event) {
+        event.preventDefault();
+
+        suggestFilms(
+            $('#suggest-number').val(),
+            $('#suggest-duration').val(),
+            $('#suggest-genres').val()
+        );
+    });
+
+    $('body').on('click', '#close-suggest-container', function(event) {
+        event.preventDefault();
+        hideSuggestForm();
     });
 
     $('a[data-action="view-mode"]').on('click', function(event) {

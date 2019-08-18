@@ -47,7 +47,7 @@
                     <form class="search" id="search" method="post" action="">
                         <div class="field">
                             <i class="fas fa-search input-prefix"></i>
-                            <input class="input-prefixed" type="search" id="search-term" placeholder="e.g. 'Harry Potter'" />
+                            <input class="input-prefixed input-block search-term" type="search" id="search-term" placeholder="e.g. 'Harry Potter'" />
                         </div>
                     </form>
 
@@ -58,6 +58,7 @@
 
                     <h3>Choose</h3>
                     <ul>
+                        <li><a href="#suggest"><i class="fa fa-hat-wizard"></i> Suggest</a></li>
                         <li><a href="#random"><i class="fa fa-dice"></i> Random</a></li>
                     </ul>
                 </nav>
@@ -99,6 +100,50 @@
 
                     <a id="close-info-container" class="info-close-btn" href="#close" title="Close preview">&times;</a>
                 </div>
+            </section>
+
+            <section class="suggest" id="suggest-container">
+                <div class="suggest-wrapper">
+                    <h2>Suggest a film</h2>
+
+                    <form method="post" action="" id="suggest-form">
+                        <div class="field">
+                            <label for="suggest-number">Choose me up to</label>
+                            <input type="number" id="suggest-number" min="1" max="5" value="3" />
+                            <span>films&hellip;</span>
+                        </div>
+
+                        <div class="field">
+                            <label for="suggest-duration">Up to</label>
+                            <input type="number" id="suggest-duration" min="5" max="300" value="180" />
+                            <span>minutes long&hellip;</span>
+                        </div>
+
+                        <div class="field" style="margin-top: 0.25em">
+                            <input class="input-block" type="range" id="suggest-duration-range" min="5" max="300" value="180" />
+                        </div>
+
+                        <div class="field">
+                            <label for="suggest-genres" class="label-block">In the genres&hellip;</label>
+                            <select class="input-block" id="suggest-genres" height="6" multiple>
+                                <option value="all" selected>All (no preference)</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <input class="input-block" type="submit" id="suggest-submit" value="Hold on to your butts!" />
+                        </div>
+                    </form>
+                </div>
+
+                <div id="suggest-no-results" class="suggest-no-results">
+                    <i class="fas fa-frown"></i>
+                    <p>Sorry, nothing matches your selection, please try again!</p>
+                </div>
+
+                <ul id="suggest-results" class="suggest-results"></ul>
+
+                <a id="close-suggest-container" class="suggest-close-btn" href="#close" title="Close tool">&times;</a>
             </section>
         </div>
 
