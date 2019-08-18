@@ -1,46 +1,37 @@
 TODO
 ====
 
-v0.2
-----
-* Generator
-    * Handle films that are not found a little better
-    * Refactor CLI script into something user friendly
-* Library
-    * Sort films alphabetically in main list, by manual order when viewing a collection
-
-v0.3
------
-* Switch to IndexedDB?
-* Library
-    * Search (titles, cast, directors)
-    * Random
-    * Suggest
-        * Select duration range
-        * Select genres
-        * Pick one or Suggest 3
-
-v0.4
-----
-* Library
-    * Keyboard shortcuts/support (arrow keys to navigate, enter to view/play, escape to close, search)
-    * Favicon/apple touch icons
-    * Mobile optimisation/testing
-
-v0.5
-----
-* Support for TV programmes/other media?
-* Library
-    * Editable collections
-
-Future ideas
-------------
-* Display film artwork as background on viewing?
-* Packaged app/standalone app (platform/install issues)?
-* Build scripts to compress CSS/JS etc
-* Add film function (when internet connection available)
+- Update/fix the generator
+    - Handle films that are not found a little better
+    - Refactor CLI script into something user friendly
+    - Skip junk in titles, like codec names
+- Sorting
+    - Alphabetically in main list
+    - By manual order when viewing a collection
+    - By search relevancy
+- Favicon/apple touch icons
+- Mobile optimisation
+- Clean up code/CSS a bit
 
 Bugs
 ----
-* Zero byte poster downloads
-* Timeouts/rate limiting
+- Zero byte poster downloads
+- Timeouts/rate limiting
+
+Desirable
+---------
+- Broken thumbnails look a bit naff
+- Play film links?
+    - May require a settings panel for app/configuring location of files
+- Keyboard shortcuts/support (arrow keys to navigate, enter to view/play, escape to close, search)
+- Display film artwork as background on viewing?
+
+Future stuff?
+-------------
+- Support for TV programmes/other media?
+- Editable collections
+- Packaged app/standalone app (platform/install issues)?
+- Build scripts to compress CSS/JS etc
+- Add film function (when internet connection available)
+- IMDB / RottenTomatoes scores?
+- Links to trailers when online
